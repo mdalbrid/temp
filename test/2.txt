@@ -1,0 +1,100 @@
+import difflib as df
+import logging
+import sys
+
+
+class Differences:
+    
+    def __init__(self, file1, file2):
+        self.path_one = file1
+        self.path_two = file2
+
+
+t
+w
+o
+    @staticmethod
+    def read_file(self) -> str:
+        """ helper function for reading file """
+        try:
+            with open(self.path_one) as f, open(self.path_two) as s:
+                f1 = f.read().splitlines()
+                f2 = s.read().splitlines()
+                return f1, f2
+                
+        except OSError as err:
+            msg = f"[diff]: Unable to open : {err}"
+            logging.error(msg)
+            sys.exit(4)
+            
+        finally:
+            msg = f"[read_file]: files read"
+            logging.debug(msg)
+
+            
+    @staticmethod
+    def write_file(file_name: str, line: str) -> str:
+        """ helper function for writing to file """
+        
+        with open(file_name, "a") as f:
+            f.writelines(line[2:] + '\n')
+
+          
+    def diff(self) -> str:
+        """
+        will produce two output files - first output file should contain
+        only strings which were found in first input file, but not in the
+        second one; second output file - strings found in the second input
+        file, but not in the first
+        """
+        
+        f1, f2 = self.read_file(self)
+        d = df.Differ()
+        diff = d.compare(f1, f2)
+
+        for line in diff:
+            if line.startswith('-'):
+                self.write_file("first.txt", line)
+            elif line.startswith('+'):
+                self.write_file("second.txt", line)
+                    
+
+    def diff_html(self):
+        """
+        an html file will be created, in which the
+        lines placed in the first file will be highlighted in red;
+        lines placed in the second file are highlighted in green
+        """
+        
+        f1, f2 = self.read_file(self)
+        d = df.HtmlDiff()
+        diff = d.make_file(f1, f2)
+        with open("diff.html", "w") as f:
+            for line in diff.splitlines():
+                print(line, file=f)
+
+
+
+
+if __name__ == '__main__':
+    """
+    will take two input files, both files consist of lexicographically
+    sorted in the same order ASCII strings
+    """
+
+    try:   
+        first = sys.argv[1]
+        second = sys.argv[2]
+        
+    except IndexError as err:
+        msg = f"[agrv]: {err}"
+        logging.error(msg)
+        sys.exit(3)
+        
+    logging.info("start")
+    a = Differences(first, second)
+    a.diff()
+    #a.diff_html()
+
+    logging.info("success")
+
