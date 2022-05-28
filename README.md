@@ -2,7 +2,7 @@
 
 #### Launch parameters:
 
-`scoros_test_task.py <path_file_1> <path_file_2>`
+`scor_test_task.py <path_file_1> <path_file_2>`
 
 
 #### Exit code:
